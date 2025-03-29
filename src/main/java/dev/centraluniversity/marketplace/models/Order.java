@@ -15,6 +15,6 @@ public class Order {
     private Long id;
     private Long userId;
     private LocalDateTime orderDate;
-    private String status;
+    private OrderStatus status;
     private List<OrderItem> items;
 }
