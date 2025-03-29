@@ -8,8 +8,6 @@ import lombok.Getter;
 @AllArgsConstructor
 @Getter
 public class OrderItemDto {
-    @NotNull
-    private Integer orderId;
 
     @NotNull
     private Integer productId;
