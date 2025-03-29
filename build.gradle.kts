@@ -29,7 +29,7 @@ dependencies {
 	annotationProcessor("org.projectlombok:lombok")
 	testImplementation("org.springframework.boot:spring-boot-starter-test")
 	testRuntimeOnly("org.junit.platform:junit-platform-launcher")
-	implementation("org.postgresql:postgresql:42.5.1")
+	implementation("org.postgresql:postgresql:42.7.2")
 	implementation("org.springframework.boot:spring-boot-starter-jdbc")
 	implementation("org.hibernate.validator:hibernate-validator:8.0.2.Final")
 }

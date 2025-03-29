@@ -3,8 +3,10 @@ package dev.centraluniversity.marketplace.dto;
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
+import lombok.Getter;
 
 @AllArgsConstructor
+@Getter
 public class OrderItemDto {
     @NotNull
     private Integer orderId;

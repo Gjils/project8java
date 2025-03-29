@@ -1,5 +1,8 @@
 package dev.centraluniversity.marketplace.models;
 
+import lombok.Getter;
+
+@Getter
 public enum OrderStatus {
     NEW("новый"),
     PROCESSING("в обработке"),
@@ -11,7 +14,4 @@ public enum OrderStatus {
         this.description = description;
     }
 
-    public String getDescription() {
-        return description;
-    }
 }

@@ -4,9 +4,10 @@ import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 import lombok.AllArgsConstructor;
-import lombok.NonNull;
+import lombok.Getter;
 
 @AllArgsConstructor
+@Getter
 public class UserDto {
     @NotNull
     @Size(max=255)

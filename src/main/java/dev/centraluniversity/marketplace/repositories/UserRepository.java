@@ -45,14 +45,14 @@ public class UserRepository {
             return ps;
         }, keyHolder);
 
-        user.setId(Objects.requireNonNull(keyHolder.getKey()).longValue());
+        Number key = (Integer)Objects.requireNonNull(keyHolder.getKeys()).get("id");
+        user.setId(key.longValue());
         return user;
-
     }
 
     public Optional<User> findById(Long id) {
         List<User> users = jdbcTemplate.query(
-                "SELECT name, email, phone, address FROM users WHERE id = ?",
+                "SELECT * FROM users WHERE id = ?",
                 rowMapper,
                 id);
         return users.stream().findFirst();

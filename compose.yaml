@@ -1,4 +1,16 @@
 services:
+#  app:
+#    build: .
+#    container_name: marketplace-app
+#    ports:
+#      - "8080:8080"
+#    depends_on:
+#      - postgres
+#    environment:
+#      SPRING_DATASOURCE_URL: jdbc:postgresql://postgres:5432/marketplace
+#      SPRING_DATASOURCE_USERNAME: admin
+#      SPRING_DATASOURCE_PASSWORD: admin
+
   postgres:
     image: postgres:latest
     container_name: postgres
@@ -6,7 +18,7 @@ services:
     environment:
       POSTGRES_USER: admin
       POSTGRES_PASSWORD: admin
-      POSTGRES_DB: db
+      POSTGRES_DB: marketplace
     volumes:
       - postgres_data:/var/lib/postgresql/data
       - ./init.sql:/docker-entrypoint-initdb.d/init.sql
