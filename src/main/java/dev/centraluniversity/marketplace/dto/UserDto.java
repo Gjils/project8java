@@ -1,5 +1,6 @@
 package dev.centraluniversity.marketplace.dto;
 
+import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
@@ -8,6 +9,7 @@ import lombok.Getter;
 
 @AllArgsConstructor
 @Getter
+@Schema
 public class UserDto {
     @NotNull
     @Size(max=255)
