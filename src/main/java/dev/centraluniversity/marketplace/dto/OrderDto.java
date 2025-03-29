@@ -1,16 +1,12 @@
 package dev.centraluniversity.marketplace.dto;
 
-import jakarta.validation.constraints.Size;
-import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.RequiredArgsConstructor;
 
-import java.time.LocalDateTime;
+import java.util.List;
 
-@AllArgsConstructor
+@RequiredArgsConstructor
 @Getter
 public class OrderDto {
-    private LocalDateTime orderDate;
-
-    @Size(max = 50)
-    private String status;
+    public List<OrderItemDto> items;
 }

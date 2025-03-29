@@ -1,7 +1,10 @@
 package dev.centraluniversity.marketplace.controllers;
 
+import dev.centraluniversity.marketplace.dto.OrderDto;
 import dev.centraluniversity.marketplace.dto.UserDto;
+import dev.centraluniversity.marketplace.models.Order;
 import dev.centraluniversity.marketplace.models.User;
+import dev.centraluniversity.marketplace.services.OrderService;
 import dev.centraluniversity.marketplace.services.UserService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -15,6 +18,7 @@ import java.util.List;
 @RequiredArgsConstructor
 public class UserController {
     private final UserService userService;
+    private final OrderService orderService;
 
     @GetMapping
     public List<User> getAllUsers() {
@@ -43,5 +47,15 @@ public class UserController {
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteUser(@PathVariable Long id) {
         return userService.deleteUser(id) ? ResponseEntity.noContent().build() : ResponseEntity.notFound().build();
+    }
+
+    @PostMapping("/{id}/orders")
+    public Order createOrder(@PathVariable Long id, @RequestBody @Valid OrderDto orderDto) {
+        return orderService.createOrder(id, orderDto);
+    }
+
+    @GetMapping("{id}/orders")
+    public List<Order> getOrdersByUser(@PathVariable Long userId) {
+        return orderService.getOrdersByUserId(userId);
     }
 }
