@@ -1,5 +1,6 @@
 package dev.centraluniversity.marketplace.repositories;
 
+import dev.centraluniversity.marketplace.exceptions.ConflictException;
 import dev.centraluniversity.marketplace.models.User;
 import lombok.AllArgsConstructor;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -31,19 +32,24 @@ public class UserRepository {
 
     public User save(User user) {
         if (user.getId() != null) {
-            throw new RuntimeException("User already exists");
+            throw new ConflictException("User already exists");
         }
         KeyHolder keyHolder = new GeneratedKeyHolder();
-        jdbcTemplate.update(connection -> {
-            PreparedStatement ps = connection.prepareStatement(
-                    "INSERT INTO users (name, email, address, phone) VALUES (?, ?, ?, ?)",
-                    Statement.RETURN_GENERATED_KEYS);
-            ps.setString(1, user.getName());
-            ps.setString(2, user.getEmail());
-            ps.setString(3, user.getAddress());
-            ps.setString(4, user.getPhone());
-            return ps;
-        }, keyHolder);
+        try {
+            jdbcTemplate.update(connection -> {
+                PreparedStatement ps = connection.prepareStatement(
+                        "INSERT INTO users (name, email, address, phone) VALUES (?, ?, ?, ?)",
+                        Statement.RETURN_GENERATED_KEYS);
+                ps.setString(1, user.getName());
+                ps.setString(2, user.getEmail());
+                ps.setString(3, user.getAddress());
+                ps.setString(4, user.getPhone());
+                return ps;
+            }, keyHolder);
+        }
+        catch (Exception e) {
+            throw new ConflictException("User with this email already exists");
+        }
 
         Number key = (Integer)Objects.requireNonNull(keyHolder.getKeys()).get("id");
         user.setId(key.longValue());

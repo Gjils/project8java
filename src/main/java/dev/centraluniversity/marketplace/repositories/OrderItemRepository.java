@@ -1,5 +1,6 @@
 package dev.centraluniversity.marketplace.repositories;
 
+import dev.centraluniversity.marketplace.exceptions.ConflictException;
 import dev.centraluniversity.marketplace.models.OrderItem;
 import lombok.AllArgsConstructor;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -30,7 +31,7 @@ public class OrderItemRepository {
 
     public OrderItem save(OrderItem orderItem) {
         if (orderItem.getId() != null) {
-            throw new RuntimeException("OrderItem already exists");
+            throw new ConflictException("OrderItem already exists");
         }
         KeyHolder keyHolder = new GeneratedKeyHolder();
         jdbcTemplate.update(connection -> {
@@ -73,8 +74,7 @@ public class OrderItemRepository {
 
     public OrderItem update(OrderItem orderItem) {
         jdbcTemplate.update(
-                "UPDATE order_items SET order_id = ?, product_id = ?, quantity = ?, price = ? WHERE id = ?",
-                orderItem.getOrderId(),
+                "UPDATE order_items SET product_id = ?, quantity = ?, price = ? WHERE id = ?",
                 orderItem.getProductId(),
                 orderItem.getQuantity(),
                 orderItem.getPrice(),

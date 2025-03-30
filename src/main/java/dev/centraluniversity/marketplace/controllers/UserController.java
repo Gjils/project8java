@@ -4,6 +4,7 @@ import dev.centraluniversity.marketplace.dto.OrderDto;
 import dev.centraluniversity.marketplace.dto.UserDto;
 import dev.centraluniversity.marketplace.models.Order;
 import dev.centraluniversity.marketplace.models.User;
+import dev.centraluniversity.marketplace.services.OrderItemService;
 import dev.centraluniversity.marketplace.services.OrderService;
 import dev.centraluniversity.marketplace.services.UserService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -23,6 +24,7 @@ import java.util.List;
 public class UserController {
     private final UserService userService;
     private final OrderService orderService;
+    private final OrderItemService orderItemService;
 
     @Operation(summary = "Find all users", description = "Retrieves all users in the system")
     @ApiResponse(responseCode = "200", description = "List of all users")
@@ -72,7 +74,7 @@ public class UserController {
     @ApiResponse(responseCode = "400", description = "Invalid order data")
     @PostMapping("/{id}/orders")
     public Order createOrder(@PathVariable Long id, @RequestBody @Valid OrderDto orderDto) {
-        return orderService.createOrder(id, orderDto);
+        return orderItemService.createOrder(id, orderDto);
     }
 
     @GetMapping("{id}/orders")

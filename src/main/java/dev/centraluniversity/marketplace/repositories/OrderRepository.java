@@ -1,5 +1,6 @@
 package dev.centraluniversity.marketplace.repositories;
 
+import dev.centraluniversity.marketplace.exceptions.ConflictException;
 import dev.centraluniversity.marketplace.models.Order;
 import dev.centraluniversity.marketplace.models.OrderStatus;
 import lombok.AllArgsConstructor;
@@ -32,7 +33,7 @@ public class OrderRepository {
 
     public Order save(Order order) {
         if (order.getId() != null) {
-            throw new RuntimeException("Order already exists");
+            throw new ConflictException("Order already exists");
         }
         KeyHolder keyHolder = new GeneratedKeyHolder();
         jdbcTemplate.update(connection -> {

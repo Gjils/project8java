@@ -1,19 +1,25 @@
 package dev.centraluniversity.marketplace.services;
 
 import dev.centraluniversity.marketplace.dto.OrderDto;
+import dev.centraluniversity.marketplace.dto.OrderItemDto;
+import dev.centraluniversity.marketplace.exceptions.NotFoundException;
 import dev.centraluniversity.marketplace.models.Order;
+import dev.centraluniversity.marketplace.models.OrderItem;
 import dev.centraluniversity.marketplace.models.OrderStatus;
 import dev.centraluniversity.marketplace.repositories.OrderRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
 public class OrderService {
+
+    private final UserService userService;
 
     private final OrderRepository orderRepository;
 
@@ -30,12 +36,17 @@ public class OrderService {
     }
 
     public Order createOrder(Long userId, OrderDto dto) {
+        if (userService.getUserById(userId).isEmpty()) {
+            throw new NotFoundException("User not found");
+        }
+
         Order order = new Order(
                 null,
                 userId,
                 LocalDateTime.now(),
                 OrderStatus.NEW,
                 null);
+
         return orderRepository.save(order);
     }
 

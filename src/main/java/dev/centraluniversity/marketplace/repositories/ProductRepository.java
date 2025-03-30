@@ -1,5 +1,6 @@
 package dev.centraluniversity.marketplace.repositories;
 
+import dev.centraluniversity.marketplace.exceptions.ConflictException;
 import dev.centraluniversity.marketplace.models.Product;
 import lombok.AllArgsConstructor;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -30,9 +31,10 @@ public class ProductRepository {
 
     public Product save(Product product) {
         if (product.getId() != null) {
-            throw new RuntimeException("Product already exists");
+            throw new ConflictException("Product already exists");
         }
         KeyHolder keyHolder = new GeneratedKeyHolder();
+
         jdbcTemplate.update(connection -> {
             PreparedStatement ps = connection.prepareStatement(
                     "INSERT INTO products (name, description, price, category) VALUES (?, ?, ?, ?)",
@@ -43,6 +45,7 @@ public class ProductRepository {
             ps.setString(4, product.getCategory());
             return ps;
         }, keyHolder);
+
 
         Number key = (Integer)Objects.requireNonNull(keyHolder.getKeys()).get("id");
         product.setId(key.longValue());

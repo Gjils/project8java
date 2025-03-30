@@ -12,7 +12,7 @@ import lombok.Getter;
 public class OrderItemDto {
 
     @NotNull
-    private Integer productId;
+    private Long productId;
 
     @NotNull
     @Min(1)
