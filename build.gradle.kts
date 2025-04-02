@@ -24,15 +24,19 @@ repositories {
 }
 
 dependencies {
-	implementation("org.springframework.boot:spring-boot-starter-web")
 	compileOnly("org.projectlombok:lombok")
 	annotationProcessor("org.projectlombok:lombok")
 	testImplementation("org.springframework.boot:spring-boot-starter-test")
 	testRuntimeOnly("org.junit.platform:junit-platform-launcher")
 	implementation("org.postgresql:postgresql")
 	implementation("org.springframework.boot:spring-boot-starter-jdbc")
-	implementation("org.hibernate.validator:hibernate-validator")
-	implementation("org.springdoc:springdoc-openapi-starter-webmvc-ui:2.0.2")
+
+	implementation("org.springframework.boot:spring-boot-starter-validation")
+	implementation("org.springframework.boot:spring-boot-starter-web")
+
+	implementation("org.springdoc:springdoc-openapi-starter-webmvc-ui:2.8.5")
+	testImplementation("org.mockito:mockito-core:3.+")
+	testImplementation("org.mockito:mockito-junit-jupiter:5.15.2")
 }
 
 tasks.withType<Test> {
