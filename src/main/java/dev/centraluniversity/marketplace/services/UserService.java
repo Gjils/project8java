@@ -1,7 +1,5 @@
 package dev.centraluniversity.marketplace.services;
 
-import dev.centraluniversity.marketplace.dto.UserDto;
-import dev.centraluniversity.marketplace.models.Order;
 import dev.centraluniversity.marketplace.models.User;
 import dev.centraluniversity.marketplace.repositories.UserRepository;
 import lombok.RequiredArgsConstructor;
@@ -19,32 +17,30 @@ public class UserService {
         return userRepository.findAll();
     }
 
-    public Optional<User> getUserById(Long id) {
-        return userRepository.findById(id);
+    public User getUserById(Long id) {
+        return userRepository.findById(id)
+                .orElseThrow(() -> new NoSuchElementException("User not found with id " + id));
     }
 
-    public User createUser(UserDto userDto) {
-        User user = new User(
-                null,
-                userDto.getName(),
-                userDto.getEmail(),
-                userDto.getAddress(),
-                userDto.getPhone(),
-                new ArrayList<Order>());
+    public User getUserByEmail(String email) {
+        return userRepository.findByEmail(email)
+                .orElseThrow(() -> new NoSuchElementException("User not found with email " + email));
+    }
+
+    public User createUser(User user) {
         return userRepository.save(user);
     }
 
-    public Optional<User> updateUser(Long id, UserDto userDto) {
-        return userRepository.findById(id).map(user -> {
-            user.setName(userDto.getName());
-            user.setEmail(userDto.getEmail());
-            user.setAddress(userDto.getAddress());
-            user.setPhone(userDto.getPhone());
-            return userRepository.update(user);
-        });
+    public User updateUser(Long id, User updatedUser) {
+        User existingUser = getUserById(id);
+        existingUser.setName(updatedUser.getName());
+        existingUser.setEmail(updatedUser.getEmail());
+        existingUser.setAddress(updatedUser.getAddress());
+        existingUser.setPhone(updatedUser.getPhone());
+        return userRepository.save(existingUser);
     }
 
-    public boolean deleteUser(Long id) {
-        return userRepository.delete(id);
+    public void deleteUser(Long id) {
+        userRepository.deleteById(id);
     }
 }
