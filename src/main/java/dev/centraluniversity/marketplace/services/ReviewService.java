@@ -45,4 +45,12 @@ public class ReviewService {
         product.setAverageRating(average);
         productRepository.save(product);
     }
+
+    public Review getReview(Long reviewId) {
+        return reviewRepository.findById(reviewId).orElseThrow();
+    };
+
+    public void deleteReview(Review review) {
+        reviewRepository.delete(review);
+    }
 }

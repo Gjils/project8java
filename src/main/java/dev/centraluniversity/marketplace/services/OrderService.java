@@ -2,6 +2,7 @@ package dev.centraluniversity.marketplace.services;
 
 import dev.centraluniversity.marketplace.models.Order;
 import dev.centraluniversity.marketplace.models.OrderItem;
+import dev.centraluniversity.marketplace.models.OrderStatus;
 import dev.centraluniversity.marketplace.repositories.OrderItemRepository;
 import dev.centraluniversity.marketplace.repositories.OrderRepository;
 import lombok.RequiredArgsConstructor;
@@ -31,9 +32,10 @@ public class OrderService {
         return orderRepository.findById(id).orElseThrow();
     }
 
-    public void updateStatus(Long orderId, String status) {
+    public Order updateStatus(Long orderId, OrderStatus status) {
         Order order = getOrder(orderId);
         order.setStatus(status);
-        orderRepository.save(order);
+        order = orderRepository.save(order);
+        return order;
     }
 }

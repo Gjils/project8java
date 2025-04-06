@@ -34,10 +34,4 @@ public class Product {
 
     @OneToMany(mappedBy = "product", cascade = CascadeType.ALL)
     private List<Review> reviews = new ArrayList<>();
-
-    @OneToMany(mappedBy = "product", cascade = CascadeType.ALL)
-    private List<OrderItem> orderItems = new ArrayList<>();
-
-    @OneToMany(mappedBy = "product", cascade = CascadeType.ALL)
-    private List<Favorite> favorites = new ArrayList<>();
 }

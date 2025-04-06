@@ -4,13 +4,14 @@ import dev.centraluniversity.marketplace.dto.ProductDto;
 import dev.centraluniversity.marketplace.models.Product;
 import dev.centraluniversity.marketplace.services.ProductService;
 import io.swagger.v3.oas.annotations.Operation;
-import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.math.BigDecimal;
 import java.util.List;
 
 @RestController
@@ -21,64 +22,59 @@ public class ProductController {
     private final ProductService productService;
 
     @GetMapping
-    @Operation(summary = "Find all products", description = "Get all products in the system")
-    @ApiResponse(responseCode = "200", description = "List of all products")
-    public List<Product> getAllProducts() {
-        return productService.getAllProducts();
+    @Operation(summary = "Get all products", description = "Retrieve all products")
+    public ResponseEntity<List<Product>> getAll() {
+        return ResponseEntity.ok(productService.getAllProducts());
     }
 
     @GetMapping("/{id}")
-    @Operation(summary = "Find product by ID", description = "Find product by id")
-    @ApiResponse(responseCode = "200", description = "Product found")
-    @ApiResponse(responseCode = "404", description = "Product not found")
-    public ResponseEntity<Product> getProductById(@PathVariable Long id) {
-        return productService.getProductById(id)
-                .map(ResponseEntity::ok)
-                .orElse(ResponseEntity.notFound().build());
+    public ResponseEntity<Product> getOne(@PathVariable Long id) {
+        return ResponseEntity.ok(productService.getProduct(id));
     }
 
-    @Operation(summary = "Find products by category", description = "Get products filtered by category")
-    @ApiResponse(responseCode = "200", description = "List of products in category")
-    @GetMapping("/category/{category}")
-    public List<Product> getProductsByCategory(@PathVariable String category) {
-        return productService.getProductsByCategory(category);
-    }
-
-    @Operation(summary = "Search products by name", description = "Search products with names containing the search term")
-    @ApiResponse(responseCode = "200", description = "List of matching products")
-    @GetMapping("/search")
-    public List<Product> searchProducts(@RequestParam String name) {
-        return productService.searchProductsByName(name);
-    }
-
-    @Operation(summary = "Create a new product", description = "Persists a new product in the database")
-    @ApiResponse(responseCode = "200", description = "Product created successfully")
-    @ApiResponse(responseCode = "400", description = "Invalid product data")
     @PostMapping
-    public ResponseEntity<Product> createProduct(@RequestBody @Valid ProductDto productDto) {
-        Product createdProduct = productService.createProduct(productDto);
-        return ResponseEntity.ok(createdProduct);
+    public ResponseEntity<Product> create(@RequestBody @Valid ProductDto productDto) {
+        Product product = new Product();
+        product.setName(productDto.getName());
+        product.setDescription(productDto.getDescription());
+        product.setCategory(productDto.getCategory());
+        product.setPrice(productDto.getPrice());
+
+        return ResponseEntity.status(HttpStatus.CREATED).body(productService.createProduct(product));
     }
 
     @PutMapping("/{id}")
-    @Operation(summary = "Update product", description = "Updates an existing product")
-    @ApiResponse(responseCode = "200", description = "Product updated successfully")
-    @ApiResponse(responseCode = "404", description = "Product not found")
-    public ResponseEntity<Product> updateProduct(
-            @PathVariable Long id,
-            @RequestBody @Valid ProductDto productDto) {
-        return productService.updateProduct(id, productDto)
-                .map(ResponseEntity::ok)
-                .orElse(ResponseEntity.notFound().build());
+    public ResponseEntity<Product> update(@PathVariable Long id, @RequestBody @Valid ProductDto productDto) {
+        Product product = productService.getProduct(id);
+        product.setName(productDto.getName());
+        product.setDescription(productDto.getDescription());
+        product.setCategory(productDto.getCategory());
+        product.setPrice(productDto.getPrice());
+        return ResponseEntity.ok(productService.updateProduct(id, product));
     }
 
     @DeleteMapping("/{id}")
-    @Operation(summary = "Delete product", description = "Removes a product from the system")
-    @ApiResponse(responseCode = "200", description = "Product deleted successfully")
-    @ApiResponse(responseCode = "404", description = "Product not found")
-    public ResponseEntity<Void> deleteProduct(@PathVariable Long id) {
-        return productService.deleteProduct(id)
-                ? ResponseEntity.noContent().build()
-                : ResponseEntity.notFound().build();
+    public ResponseEntity<Void> delete(@PathVariable Long id) {
+        productService.deleteProduct(id);
+        return ResponseEntity.noContent().build();
+    }
+
+    @GetMapping("/findByCategory")
+    public ResponseEntity<List<Product>> filterByCategory(
+            @RequestParam(required = false) String category) {
+
+        List<Product> filtered = productService.filterByCategory(category);
+
+        return ResponseEntity.ok(filtered);
+    }
+
+    @GetMapping("/findByPrice")
+    public ResponseEntity<List<Product>> filterByPrice(
+            @RequestParam(required = false) BigDecimal minPrice,
+            @RequestParam(required = false) BigDecimal maxPrice) {
+
+        List<Product> filtered = productService.filterByPrice(minPrice, maxPrice);
+
+        return ResponseEntity.ok(filtered);
     }
 }
