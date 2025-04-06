@@ -2,10 +2,11 @@ package dev.centraluniversity.marketplace.controllers;
 
 import dev.centraluniversity.marketplace.dto.FavoriteDto;
 import dev.centraluniversity.marketplace.dto.ProductDto;
-import dev.centraluniversity.marketplace.dto.ReviewDto;
 import dev.centraluniversity.marketplace.dto.UserDto;
+import dev.centraluniversity.marketplace.models.Favorite;
 import dev.centraluniversity.marketplace.models.Product;
 import dev.centraluniversity.marketplace.models.User;
+import dev.centraluniversity.marketplace.repositories.FavoriteRepository;
 import dev.centraluniversity.marketplace.repositories.ProductRepository;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -35,6 +36,8 @@ public class UserControllerIntegralTest {
             .withDatabaseName("testdb")
             .withUsername("testuser")
             .withPassword("testpass");
+    @Autowired
+    private FavoriteRepository favoriteRepository;
 
     @DynamicPropertySource
     static void postgresqlProperties(DynamicPropertyRegistry registry) {
@@ -68,15 +71,12 @@ public class UserControllerIntegralTest {
         assertEquals(HttpStatus.CREATED, productResponse.getStatusCode());
         assertEquals(HttpStatus.CREATED, userResponse.getStatusCode());
 
-        ReviewDto reviewDto = new FavoriteDto();
-        reviewDto.setProductId(productResponse.getBody().getId());
-        reviewDto.setRating(3);
-        reviewDto.setComment("Test Comment");
+        FavoriteDto favoriteDto = new FavoriteDto();
+        favoriteDto.setProductId(productResponse.getBody().getId());
 
-        testRestTemplate.postForObject("/users/" + userResponse.getBody().getId() + "/review", reviewDto, Object.class);
+        testRestTemplate.postForObject("/users/" + userResponse.getBody().getId() + "/favorites", favoriteDto, Object.class);
 
-        Product saved = productRepository.findById(productResponse.getBody().getId()).orElse(null);
+        Favorite saved = favoriteRepository.findByUserIdAndProductId(userResponse.getBody().getId(), productResponse.getBody().getId()).orElse(null);
         assertNotNull(saved);
-        assertEquals(new BigDecimal("3.00"), saved.getAverageRating());
     }
 }
