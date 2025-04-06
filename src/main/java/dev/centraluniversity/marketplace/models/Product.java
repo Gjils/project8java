@@ -31,7 +31,4 @@ public class Product {
 
     @Column(name = "average_rating", precision = 3, scale = 2)
     private BigDecimal averageRating;
-
-    @OneToMany(mappedBy = "product", cascade = CascadeType.ALL)
-    private List<Review> reviews = new ArrayList<>();
 }

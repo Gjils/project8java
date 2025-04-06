@@ -4,7 +4,6 @@ import dev.centraluniversity.marketplace.dto.ProductDto;
 import dev.centraluniversity.marketplace.dto.ReviewDto;
 import dev.centraluniversity.marketplace.dto.UserDto;
 import dev.centraluniversity.marketplace.models.Product;
-import dev.centraluniversity.marketplace.models.Review;
 import dev.centraluniversity.marketplace.models.User;
 import dev.centraluniversity.marketplace.repositories.ProductRepository;
 import org.junit.jupiter.api.Test;

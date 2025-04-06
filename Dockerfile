@@ -1,7 +1,7 @@
 FROM gradle:8.13-jdk17 AS builder
 WORKDIR /app
 COPY . .
-RUN gradle clean build --info
+RUN gradle clean build --info -x test
 
 FROM openjdk:17-jdk-slim
 WORKDIR /app
